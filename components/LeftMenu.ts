@@ -3,7 +3,6 @@ import { leftMenu } from '../data/static/sideMenu';
 
 export class LeftMenu {
     readonly page: Page;
-
     readonly sidebarMenu: Locator;
     readonly sideMenuItems: Locator;
 
@@ -20,6 +19,12 @@ export class LeftMenu {
         });
     }
 
+    private getSubMenuItem(menuName: string, subMenuName: string): Locator {
+        return this.getMenuItem(menuName)
+            .locator(':scope > div.dropdown-menu > a.dropdown-item')
+            .filter({has: this.page.getByTitle(subMenuName, { exact: true })});
+    }
+
     async expectLoaded() {
         await expect(this.sidebarMenu).toBeVisible();
     }
@@ -32,17 +37,12 @@ export class LeftMenu {
 
     async selectMenuItem(menuName: string) {
         await this.getMenuItem(menuName)
-            .getByTitle(menuName, { exact: true })
+            .locator(':scope > a, :scope > button')
             .click();
     }
 
     async selectSubMenuItem(menuName: string, subMenuName: string) {
-        const menuItem = this.getMenuItem(menuName);
-
-        const subMenuItem = menuItem
-            .locator(':scope > div.dropdown-menu > a.dropdown-item')
-            .filter({has: this.page.getByTitle(subMenuName, { exact: true })});
-
-        await subMenuItem.click();
+        await this.selectMenuItem(menuName);
+        await this.getSubMenuItem(menuName, subMenuName).click();
     }
 }
