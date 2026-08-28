@@ -1,7 +1,7 @@
 import { test } from '../fixtures/pageFixtures';
 import { users } from '../data/static/users';
 
-test('TC-01 - Valid admin login @smoke', async ({
+test('TC-05 - Dashboard page loaded after login @smoke', async ({
     loginPage,
     dashboardPage,
 }) => {
@@ -17,8 +17,10 @@ test('TC-01 - Valid admin login @smoke', async ({
     await dashboardPage.expectLoaded();
 });
 
-test('TC-02 - Invalid password login @negative', async ({ 
-    loginPage 
+test('TC-06 - Left menu is displayed @smoke', async ({
+    loginPage,
+    dashboardPage,
+    leftMenu,
 }) => {
     await loginPage.open();
 
@@ -26,45 +28,34 @@ test('TC-02 - Invalid password login @negative', async ({
 
     await loginPage.login(
         users.admin.username,
-        users.invalidPassword.password
+        users.admin.password
     );
 
-    await loginPage.expectInvalidCredentialsError();
+    await dashboardPage.expectLoaded();
+
+    await leftMenu.expectLoaded();
+
+    await leftMenu.expectMenuVisible();
 });
 
-test('TC-03 - Required field validation @negative', async ({
+test('TC-07 - Header/profile area visibility @regression', async ({
     loginPage,
-}) => {
-    await loginPage.open();
-
-    await loginPage.expectLoaded();
-
-    await loginPage.login('', '');
-
-    await loginPage.expectRequiredFieldValidation();
-});
-
-test('TC-04 - Logout successfully @smoke', async ({
-    loginPage,
-    dashboardPage,
     headerPage,
 }) => {
     await loginPage.open();
-
+    
     await loginPage.expectLoaded();
 
     await loginPage.login(
         users.admin.username,
         users.admin.password
     );
-
-    await dashboardPage.expectLoaded();
 
     await headerPage.expectLoaded();
 
     await headerPage.expectUserMenuVisible();
 
-    await headerPage.logout();
-
-    await loginPage.expectLoaded();
+    await headerPage.openUserMenu();
+    
+    await headerPage.expectProfileMenuVisible();
 });
