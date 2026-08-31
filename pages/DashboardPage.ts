@@ -8,10 +8,11 @@ export class DashboardPage {
     constructor(page: Page) {
         this.page = page;
         
-        this.dashboardHeading = page.getByRole('heading', {name: 'Dashboard', level: 1});
+        this.dashboardHeading = page.locator('#sidebar-menu-main + div h1');
     }
 
     async expectLoaded() {
         await expect(this.dashboardHeading).toBeVisible();
+        await this.page.waitForLoadState('networkidle');
     }
 }

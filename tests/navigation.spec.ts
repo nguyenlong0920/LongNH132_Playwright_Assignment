@@ -1,23 +1,16 @@
 import { test } from '../fixtures/pageFixtures';
-import { users } from '../data/static/users';
 
 test('TC-08 - Navigate to Products module from left menu @regression', async ({
     loginPage,
     dashboardPage,
     productPage,
+    leftMenu,
 }) => {
-    await loginPage.open();
-    
-    await loginPage.expectLoaded();
-
-    await loginPage.login(
-        users.admin.username,
-        users.admin.password
-    );
+    await loginPage.loginFullFlow();
 
     await dashboardPage.expectLoaded();
 
-    await productPage.openProductList();
+    await leftMenu.selectMenuItem('Ecommerce', 'Products');
 
     await productPage.expectLoaded();
 });

@@ -3,26 +3,29 @@ import { leftMenu } from '../data/static/sideMenu';
 
 export class LeftMenu {
     readonly page: Page;
+
     readonly sidebarMenu: Locator;
     readonly sideMenuItems: Locator;
+    readonly sideSubMenuItems: Locator;
 
     constructor(page: Page) {
         this.page = page;
 
         this.sidebarMenu = page.locator('#sidebar-menu');
-        this.sideMenuItems = this.sidebarMenu.locator(':scope > ul.navbar-nav > li.nav-item');
+        this.sideMenuItems = this.sidebarMenu.getByRole('listitem');
+        this.sideSubMenuItems = this.sideMenuItems.getByRole('link');
     }
 
-    private getMenuItem(menuName: string): Locator {
+    private getMenuItem(menuName: string, subMenuName?: string): Locator {
+        if (subMenuName) {
+            return this.sideSubMenuItems.filter({
+                has: this.page.getByTitle(subMenuName, { exact: true }),
+            });
+        }
+
         return this.sideMenuItems.filter({
             has: this.page.getByTitle(menuName, { exact: true }),
         });
-    }
-
-    private getSubMenuItem(menuName: string, subMenuName: string): Locator {
-        return this.getMenuItem(menuName)
-            .locator(':scope > div.dropdown-menu > a.dropdown-item')
-            .filter({has: this.page.getByTitle(subMenuName, { exact: true })});
     }
 
     async expectLoaded() {
@@ -35,14 +38,18 @@ export class LeftMenu {
         }
     }
 
-    async selectMenuItem(menuName: string) {
-        await this.getMenuItem(menuName)
-            .locator(':scope > a, :scope > button')
-            .click();
-    }
+    async selectMenuItem(menuName: string, subMenuName?: string) {
 
-    async selectSubMenuItem(menuName: string, subMenuName: string) {
-        await this.selectMenuItem(menuName);
-        await this.getSubMenuItem(menuName, subMenuName).click();
+        await this.expectLoaded();
+
+        await this.expectMenuVisible();
+
+        await this.getMenuItem(menuName).click();
+
+        if (subMenuName) {
+            await this.getMenuItem(menuName, subMenuName).click();
+        }
+        
+        await this.page.waitForLoadState('networkidle');
     }
 }

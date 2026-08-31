@@ -6,9 +6,7 @@ test('TC-01 - Valid admin login @smoke', async ({
     dashboardPage,
 }) => {
     await loginPage.open();
-
     await loginPage.expectLoaded();
-
     await loginPage.login(
         users.admin.username,
         users.admin.password
@@ -18,53 +16,43 @@ test('TC-01 - Valid admin login @smoke', async ({
 });
 
 test('TC-02 - Invalid password login @negative', async ({ 
-    loginPage 
+    loginPage,
+    notification, 
 }) => {
     await loginPage.open();
-
     await loginPage.expectLoaded();
-
     await loginPage.login(
         users.admin.username,
         users.invalidPassword.password
     );
 
-    await loginPage.expectInvalidCredentialsError();
+    await notification.expectLoginMessage('fail');
 });
 
 test('TC-03 - Required field validation @negative', async ({
     loginPage,
 }) => {
     await loginPage.open();
-
     await loginPage.expectLoaded();
-
     await loginPage.login('', '');
-
     await loginPage.expectRequiredFieldValidation();
 });
 
 test('TC-04 - Logout successfully @smoke', async ({
     loginPage,
     dashboardPage,
-    headerPage,
+    header,
+    notification,
 }) => {
-    await loginPage.open();
-
-    await loginPage.expectLoaded();
-
-    await loginPage.login(
-        users.admin.username,
-        users.admin.password
-    );
+    await loginPage.loginFullFlow();
 
     await dashboardPage.expectLoaded();
 
-    await headerPage.expectLoaded();
-
-    await headerPage.expectUserMenuVisible();
-
-    await headerPage.logout();
+    await header.expectLoaded();
+    await header.expectUserMenuVisible();
+    await header.logout();
 
     await loginPage.expectLoaded();
+
+    await notification.expectLoginMessage('success');
 });

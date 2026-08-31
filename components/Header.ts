@@ -1,8 +1,7 @@
 import { Locator, Page, expect } from '@playwright/test';
 
-export class HeaderPage {
+export class Header {
     readonly page: Page;
-
     readonly header: Locator;
 
     readonly userMenu: Locator;
@@ -11,7 +10,6 @@ export class HeaderPage {
 
     constructor(page: Page) {
         this.page = page;
-
         this.header = page.locator('header.navbar');
 
         this.userMenu = this.header.getByRole('link', {name: 'Open user menu', exact: true});
