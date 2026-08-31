@@ -9,6 +9,9 @@ export class CreateProductPage {
     readonly productPriceInput: Locator;
     readonly saveExitButton: Locator;
 
+    readonly productNameError: Locator;
+    readonly productPriceError: Locator;
+
     constructor(page: Page) {
         this.page = page;
 
@@ -16,6 +19,9 @@ export class CreateProductPage {
         this.productSkuInput = page.locator('#sku');
         this.productPriceInput = page.locator('#price');
         this.saveExitButton = page.getByRole('button', { name: 'Save & Exit', exact: true });
+
+        this.productNameError = page.locator('#name-error');
+        this.productPriceError = page.locator('#price-error');
     }
 
     async expectCreateProductPageLoaded() {
@@ -43,5 +49,15 @@ export class CreateProductPage {
         await this.productPriceInput.fill('');
         await this.productPriceInput.fill(newPrice);
         await this.saveAndExit();
+    }
+
+    async verifyInvalidProductName() {
+        await this.expectCreateProductPageLoaded();
+        await expect(this.productNameError).toBeVisible();
+    }
+
+    async verifyInvalidProductPrice() {
+        await this.expectCreateProductPageLoaded();
+        await expect(this.productPriceError).toBeVisible();
     }
 }
