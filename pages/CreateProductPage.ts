@@ -55,9 +55,11 @@ export class CreateProductPage {
 
     async verifyInvalidProductName() {
         await expect(this.productNameError).toBeVisible();
+        await expect(this.productNameError).toHaveText("Please enter product's name");
     }
 
     async verifyInvalidProductPrice() {
         await expect(this.productPriceError).toBeVisible();
+        await expect(this.productPriceError).toHaveText("The price must be at least 0.");
     }
 }
