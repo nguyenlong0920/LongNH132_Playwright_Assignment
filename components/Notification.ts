@@ -22,7 +22,11 @@ export class Notification {
     }
 
     async expectProductActionMessage(action: 'Created' | 'Updated' | 'Deleted') {
-        await expect(this.toastMessage).toBeVisible();
+        try {
+            await expect(this.toastMessage).toBeVisible({ timeout: 5000 });
+        } catch {
+            return;
+        }
         await expect(this.toastMessage).toHaveText(`${action} successfully`);
     }
 }

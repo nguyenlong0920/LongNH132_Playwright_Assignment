@@ -20,7 +20,7 @@ export class CreateProductPage {
         this.productLinkInput = page.locator('#slug');
         this.productSkuInput = page.locator('#sku');
         this.productPriceInput = page.locator('#price');
-        this.saveExitButton = page.getByRole('button', { name: 'Save & Exit', exact: true });
+        this.saveExitButton = page.locator('.card-body button[value="save"]');
 
         this.productNameError = page.locator('#name-error');
         this.productPriceError = page.locator('#price-error');
