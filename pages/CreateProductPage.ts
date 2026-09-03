@@ -5,6 +5,7 @@ export class CreateProductPage {
     readonly page: Page;
 
     readonly productNameInput: Locator;
+    readonly productLinkInput: Locator;
     readonly productSkuInput: Locator;
     readonly productPriceInput: Locator;
     readonly saveExitButton: Locator;
@@ -16,6 +17,7 @@ export class CreateProductPage {
         this.page = page;
 
         this.productNameInput = page.locator('#name');
+        this.productLinkInput = page.locator('#slug');
         this.productSkuInput = page.locator('#sku');
         this.productPriceInput = page.locator('#price');
         this.saveExitButton = page.getByRole('button', { name: 'Save & Exit', exact: true });
@@ -24,40 +26,38 @@ export class CreateProductPage {
         this.productPriceError = page.locator('#price-error');
     }
 
-    async expectCreateProductPageLoaded() {
+    async expectLoaded() {
         await expect(this.page).toHaveURL(/\/admin\/ecommerce\/products\/create$/);
     }
 
     async inputProductDetails(product: ProductData) {
         await this.productNameInput.fill(product.name);
+        await this.productLinkInput.fill(product.name);
         await this.productSkuInput.fill(product.sku);
         await this.productPriceInput.fill(product.price);
     }
 
     async saveAndExit() {
         await this.saveExitButton.click();
-        await this.page.waitForLoadState('networkidle');
     }
 
     async createAndVerifyProduct(product: ProductData) {
-        await this.expectCreateProductPageLoaded();
+        await this.expectLoaded();
         await this.inputProductDetails(product);
         await this.saveAndExit();
     }
 
-    async changeProductPrice(newPrice: string) {
+    async changeProductPrice(product: ProductData) {
         await this.productPriceInput.fill('');
-        await this.productPriceInput.fill(newPrice);
+        await this.productPriceInput.fill(product.price);
         await this.saveAndExit();
     }
 
     async verifyInvalidProductName() {
-        await this.expectCreateProductPageLoaded();
         await expect(this.productNameError).toBeVisible();
     }
 
     async verifyInvalidProductPrice() {
-        await this.expectCreateProductPageLoaded();
         await expect(this.productPriceError).toBeVisible();
     }
 }

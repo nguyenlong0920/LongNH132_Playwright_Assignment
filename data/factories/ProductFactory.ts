@@ -13,7 +13,7 @@ export class ProductFactory {
         return {
             name: `Test Product ${id}`,
             sku: `TEST-SKU-${id}`,
-            price: `100`,
+            price: `100.00`,
         };
     }
 

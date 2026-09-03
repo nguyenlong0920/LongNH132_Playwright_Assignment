@@ -37,14 +37,11 @@ export class LoginPage {
     }
 
     async expectRequiredFieldValidation() {
-        const usernameRequiredMessage = 'The username field is required.';
-        const passwordRequiredMessage = 'The password field is required.';
-
         await expect(this.loginForm).toBeVisible();
         await expect(this.usernameError).toBeVisible();
-        await expect(this.usernameError).toContainText(usernameRequiredMessage);
+        await expect(this.usernameError).toContainText('The username field is required.');
         await expect(this.passwordError).toBeVisible();
-        await expect(this.passwordError).toContainText(passwordRequiredMessage);
+        await expect(this.passwordError).toContainText('The password field is required.');
     }
 
     async login(username: string, password: string) {

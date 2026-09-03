@@ -14,6 +14,10 @@ export default defineConfig({
 
     workers: process.env.CI ? 2 : 4,
 
+    expect: {
+        timeout: 10_000,
+    },
+
     reporter: [['html', {
         outputFolder: 'playwright-report',
         open: 'never',

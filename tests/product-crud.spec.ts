@@ -15,16 +15,16 @@ test('TC-09 - Create product with mandatory fields @crud @regression', async ({
 
     await leftMenu.selectMenuItem('Ecommerce', 'Products');
 
-    const product = ProductFactory.create();
-
     await productPage.expectLoaded();
     await productPage.createProductWithType('physical');
 
-    await createProductPage.expectCreateProductPageLoaded();
+    const product = ProductFactory.create();
+
+    await createProductPage.expectLoaded();
     await createProductPage.inputProductDetails(product);
     await createProductPage.saveAndExit();
 
-    await notification.expectCreateProductMessage('Created successfully');
+    await notification.expectProductActionMessage('Created');
 
     await productPage.expectProductInList(product);
 });
@@ -43,27 +43,19 @@ test('TC-10 - Create product with dynamic product name and SKU @crud @data', asy
 
     await leftMenu.selectMenuItem('Ecommerce', 'Products');
 
-    const products = ProductFactory.createMany(2);
-
     await productPage.expectLoaded();
 
-    // Create product 1
-    await productPage.createProductWithType('physical');
+    const products = ProductFactory.createMany(2);
 
-    await createProductPage.createAndVerifyProduct(products[0]);
+    for (const product of products) {
+        await productPage.createProductWithType('physical');
 
-    await notification.expectCreateProductMessage('Created successfully');
+        await createProductPage.createAndVerifyProduct(product);
 
-    await productPage.expectProductInList(products[0]);
+        await notification.expectProductActionMessage('Created');
 
-    // Create product 2
-    await productPage.createProductWithType('physical');
-
-    await createProductPage.createAndVerifyProduct(products[1]);
-
-    await notification.expectCreateProductMessage('Created successfully');
-
-    await productPage.expectProductInList(products[1]);
+        await productPage.expectProductInList(product);
+    }
 
     // Verify that the two products are unique
     await productPage.expectProductsAreUnique(products[0], products[1]);
@@ -83,17 +75,17 @@ test('TC-11 - Search product by name @crud @regression', async ({
 
     await leftMenu.selectMenuItem('Ecommerce', 'Products');
 
-    const product = ProductFactory.create();
-
     await productPage.expectLoaded();
     await productPage.createProductWithType('physical');
 
+    const product = ProductFactory.create();
+
     await createProductPage.createAndVerifyProduct(product);
 
-    await notification.expectCreateProductMessage('Created successfully');
+    await notification.expectProductActionMessage('Created');
 
     await productPage.expectProductInList(product);
-    await productPage.searchProductByName(product.name);
+    await productPage.searchProductByName(product);
     await productPage.verifySearchProduct(product);
 });
 
@@ -111,21 +103,26 @@ test('TC-12 - Update product price @crud @regression', async ({
 
     await leftMenu.selectMenuItem('Ecommerce', 'Products');
 
-    const product = ProductFactory.create();
-
     await productPage.expectLoaded();
     await productPage.createProductWithType('physical');
 
+    const product = ProductFactory.create();
+
     await createProductPage.createAndVerifyProduct(product);
 
-    await notification.expectCreateProductMessage('Created successfully');
+    await notification.expectProductActionMessage('Created');
 
     await productPage.expectProductInList(product);
     await productPage.clickEditProductButton(product);
 
-    await createProductPage.changeProductPrice('200');
+    // Update price
+    product.price = '200.00';
 
-    await productPage.verifyProductPrice('200');
+    await createProductPage.changeProductPrice(product);
+
+    await notification.expectProductActionMessage('Updated');
+
+    await productPage.verifyProductPrice(product);
 });
 
 test('TC-13 - Delete created product @crud @cleanup', async ({
@@ -142,16 +139,18 @@ test('TC-13 - Delete created product @crud @cleanup', async ({
 
     await leftMenu.selectMenuItem('Ecommerce', 'Products');
 
-    const product = ProductFactory.create();
-
     await productPage.expectLoaded();
     await productPage.createProductWithType('physical');
 
+    const product = ProductFactory.create();
+
     await createProductPage.createAndVerifyProduct(product);
 
-    await notification.expectCreateProductMessage('Created successfully');
+    await notification.expectProductActionMessage('Created');
 
     await productPage.expectProductInList(product);
     await productPage.clickDeleteProductButton(product);
     await productPage.confirmDeleteProduct();
+
+    await notification.expectProductActionMessage('Deleted');
 });

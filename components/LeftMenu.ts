@@ -39,17 +39,12 @@ export class LeftMenu {
     }
 
     async selectMenuItem(menuName: string, subMenuName?: string) {
-
         await this.expectLoaded();
-
         await this.expectMenuVisible();
-
         await this.getMenuItem(menuName).click();
 
         if (subMenuName) {
             await this.getMenuItem(menuName, subMenuName).click();
         }
-        
-        await this.page.waitForLoadState('networkidle');
     }
 }

@@ -26,7 +26,7 @@ test('TC-02 - Invalid password login @negative', async ({
         users.invalidPassword.password
     );
 
-    await notification.expectLoginMessage('fail');
+    await notification.expectLoginMessage('Fail');
 });
 
 test('TC-03 - Required field validation @negative', async ({
@@ -54,5 +54,5 @@ test('TC-04 - Logout successfully @smoke', async ({
 
     await loginPage.expectLoaded();
 
-    await notification.expectLoginMessage('success');
+    await notification.expectLoginMessage('Success');
 });

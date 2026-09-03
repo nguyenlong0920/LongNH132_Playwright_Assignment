@@ -8,24 +8,21 @@ export class Notification {
     constructor(page: Page) {
         this.page = page;
 
-        this.toastMessage = page.locator('.toastify');
+        this.toastMessage = page.locator('.toastify').last();
     }
 
-    async expectLoginMessage(message: 'fail' | 'success') {
-        const failMessage = 'These credentials do not match our records.';
-        const successMessage = 'Logout successfully!';
-
+    async expectLoginMessage(message: 'Fail' | 'Success') {
         await expect(this.toastMessage).toBeVisible();
-        if (message === 'fail') {
-            await expect(this.toastMessage).toContainText(failMessage);
+        
+        if (message === 'Fail') {
+            await expect(this.toastMessage).toContainText('These credentials do not match our records.');
         } else {
-            await expect(this.toastMessage).toContainText(successMessage);
+            await expect(this.toastMessage).toContainText('Logout successfully!');
         }
     }
 
-    async expectCreateProductMessage(message: string) {
-        const expectedMessage = 'Created successfully';
-
-        await expect(this.toastMessage).toContainText(expectedMessage);
+    async expectProductActionMessage(action: 'Created' | 'Updated' | 'Deleted') {
+        await expect(this.toastMessage).toBeVisible();
+        await expect(this.toastMessage).toHaveText(`${action} successfully`);
     }
 }

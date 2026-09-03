@@ -1,13 +1,16 @@
 import { Locator, Page, expect } from '@playwright/test';
 import { ProductData } from '../data/factories/ProductFactory';
+import { WaitHelper } from '../utils/waitHelper';
 
 export class ProductPage {
     readonly page: Page;
+    readonly waitHelper: WaitHelper;
 
     readonly createButton: Locator;
     readonly physicalProductOption: Locator;
     readonly digitalProductOption: Locator;
 
+    readonly listProduct: Locator;
     readonly listProductRow: Locator;
     readonly listProductName: Locator;
     readonly listProductPrice: Locator;
@@ -21,12 +24,14 @@ export class ProductPage {
 
     constructor(page: Page) {
         this.page = page;
+        this.waitHelper = new WaitHelper(page);
 
         this.createButton = page.getByRole('button', { name: 'Create', exact: true });
         this.physicalProductOption = page.getByRole('button', { name: 'Physical', exact: true });
         this.digitalProductOption = page.getByRole('button', { name: 'Digital', exact: true });
 
-        this.listProductRow = page.locator('tbody').getByRole('row');
+        this.listProduct = page.locator('tbody')
+        this.listProductRow = this.listProduct.getByRole('row');
         this.listProductName = this.listProductRow.locator('.column-key-2 a');
         this.listProductPrice = this.listProductRow.locator('.column-key-3');
         this.listProductSKU = this.listProductRow.locator('.column-key-6');
@@ -42,7 +47,12 @@ export class ProductPage {
         await expect(this.page).toHaveURL(/\/admin\/ecommerce\/products$/);
     }
 
+    async waitForTableData() {
+        await expect(this.listProduct).toBeVisible();
+    }
+
     async createProductWithType(productType: 'physical' | 'digital') {
+        await this.waitForTableData();
         await expect(this.createButton).toBeVisible();
         await this.createButton.click();
         await expect(this.physicalProductOption).toBeVisible();
@@ -51,11 +61,11 @@ export class ProductPage {
         productType === 'physical' 
         ? await this.physicalProductOption.click() 
         : await this.digitalProductOption.click();
-
-        await this.page.waitForLoadState('networkidle');
     }
 
     async expectProductInList(product: ProductData) {
+        await this.waitForTableData();
+
         const productRow = this.listProductRow
             .filter({hasText: product.name})
             .filter({hasText: product.sku})
@@ -73,38 +83,37 @@ export class ProductPage {
         expect(firstProduct.sku).not.toBe(secondProduct.sku);
     }
 
-    async searchProductByName(productName: string) {
-        await this.searchProductInput.fill(productName);
+    async searchProductByName(product: ProductData) {
+        await this.searchProductInput.fill(product.name);
         await this.searchProductInput.press('Enter');
-        await this.page.waitForLoadState('networkidle');
+        await this.waitHelper.waitForTableReady();
+        await this.waitForTableData();
         await expect(this.editProductButton).toHaveCount(1);
     }
 
-    async verifyProductPrice(productPrice: string){
+    async verifyProductPrice(product: ProductData){
         const price = await this.listProductPrice.textContent();
-        expect(price?.replace(/^Rs/, '').trim()).toBe(productPrice);
+        expect(price?.replace(/[^0-9.]/g, '').trim()).toBe(product.price);
     }
 
     async verifySearchProduct(product: ProductData) {
         await expect(this.listProductName).toHaveText(product.name);
         await expect(this.listProductSKU).toHaveText(product.sku);
-        await this.verifyProductPrice(product.price);
+        await this.verifyProductPrice(product);
     }
 
     async clickEditProductButton(product: ProductData) {
-        await this.searchProductByName(product.name);
+        await this.searchProductByName(product);
         await this.editProductButton.click()
-        await this.page.waitForLoadState('networkidle');
     }
 
     async clickDeleteProductButton(product: ProductData) {
-        await this.searchProductByName(product.name);
+        await this.searchProductByName(product);
         await this.deleteProductButton.click();
     }
 
     async confirmDeleteProduct() {
         await this.confirmDeleteButton.click();
-        await this.page.waitForLoadState('networkidle');
         await expect(this.listProductRow).toHaveText('No record');
     }
 }

@@ -17,8 +17,12 @@ test('TC-14 - Validate required fields on create product form @negative', async 
     await productPage.expectLoaded();
     await productPage.createProductWithType('physical');
 
+    const product = ProductFactory.create();
+    
     // Leave mandatory fields blank
-    await createProductPage.saveAndExit();
+    product.name = '';
+
+    await createProductPage.createAndVerifyProduct(product);
     await createProductPage.verifyInvalidProductName();
 });
 
@@ -35,12 +39,13 @@ test('TC-15 - Validate invalid price input @negative', async ({
 
     await leftMenu.selectMenuItem('Ecommerce', 'Products');
 
-    const product = ProductFactory.create();
-    // Invalid price
-    product.price = '-1';
-
     await productPage.expectLoaded();
     await productPage.createProductWithType('physical');
+
+    const product = ProductFactory.create();
+    
+    // Invalid price
+    product.price = '-1';
 
     await createProductPage.createAndVerifyProduct(product);
     await createProductPage.verifyInvalidProductPrice();
