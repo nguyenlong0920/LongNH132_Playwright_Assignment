@@ -6,6 +6,7 @@ import { LeftMenu } from '../components/LeftMenu';
 import { ProductPage } from '../pages/ProductPage';
 import { CreateProductPage} from '../pages/CreateProductPage';
 import { Notification } from '../components/Notification';
+import { logger } from '../utils/logger';
 
 type PageFixtures = {
   	loginPage: LoginPage;
@@ -45,6 +46,22 @@ export const test = base.extend<PageFixtures>({
     notification: async ({ page }, use) => {
         await use(new Notification(page));
     }
+});
+
+test.afterEach(async ({}, testInfo) => {
+    const context = {
+        title: testInfo.title,
+        status: testInfo.status,
+        expectedStatus: testInfo.expectedStatus,
+        retry: testInfo.retry,
+    };
+
+    if (testInfo.status !== testInfo.expectedStatus) {
+        logger.error('Test finished with an unexpected status', context);
+        return;
+    }
+
+    logger.debug('Test finished successfully', context);
 });
 
 export { expect } from '@playwright/test';

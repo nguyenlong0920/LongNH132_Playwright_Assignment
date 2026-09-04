@@ -1,5 +1,6 @@
 import { Locator, Page, expect } from '@playwright/test';
 import { users } from '../data/static/users';
+import { logger } from '../utils/logger';
 
 export class LoginPage {
     readonly page: Page;
@@ -25,6 +26,7 @@ export class LoginPage {
     }
 
     async open() {
+        logger.info('Opening login page');
         await this.page.goto('/admin');
     }
 
@@ -45,6 +47,7 @@ export class LoginPage {
     }
 
     async login(username: string, password: string) {
+        logger.info('Submitting login form', { username });
         await this.usernameInput.fill(username);
         await this.passwordInput.fill(password);
         await this.signInButton.click();

@@ -30,8 +30,7 @@ test('TC-16 - Create multiple products using data factory @data @regression', as
     }
 
     for (const product of products) {
-        await productPage.clickDeleteProductButton(product);
-        await productPage.confirmDeleteProduct();
+        await productPage.cleanupProduct(product);
 
         await notification.expectProductActionMessage('Deleted');
     }

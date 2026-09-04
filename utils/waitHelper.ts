@@ -1,4 +1,5 @@
 import { Locator, Page, expect } from '@playwright/test';
+import { logger } from './logger';
 
 export class WaitHelper {
     readonly page: Page;
@@ -19,7 +20,9 @@ export class WaitHelper {
         } catch {
             return;
         }
+        logger.debug('Waiting for page loading spinner to disappear');
         await expect(this.spinner).toHaveCount(0);
+        logger.debug('Page loading spinner disappeared');
     }
 
     async waitForTableReady () {
@@ -28,6 +31,8 @@ export class WaitHelper {
         } catch {
             return;
         }
+        logger.debug('Waiting for product table loading spinner to disappear');
         await expect(this.tableSpinner).toBeHidden();
+        logger.debug('Product table loading spinner disappeared');
     }
 }

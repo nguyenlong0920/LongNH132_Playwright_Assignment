@@ -46,8 +46,7 @@ test('TC-17 - Use shared Notification component to verify messages @framework', 
 
     await productPage.verifySearchProduct(product);
 
-    await productPage.clickDeleteProductButton(product);
-    await productPage.confirmDeleteProduct();
+    await productPage.cleanupProduct(product);
 
     await notification.expectProductActionMessage('Deleted');
 });
@@ -80,4 +79,7 @@ test('TC-18 - Use fixture-injected page objects in tests @framework', async ({
     await notification.expectProductActionMessage('Created');
 
     await productPage.expectProductInList(product);
+    await productPage.cleanupProduct(product);
+    
+    await notification.expectProductActionMessage('Deleted');
 }); 

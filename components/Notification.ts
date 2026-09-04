@@ -1,4 +1,5 @@
 import { Locator, Page, expect } from '@playwright/test';
+import { logger } from '../utils/logger';
 
 export class Notification {
     readonly page: Page;
@@ -12,6 +13,7 @@ export class Notification {
     }
 
     async expectLoginMessage(message: 'Fail' | 'Success') {
+        logger.debug('Verifying login notification', { message });
         await expect(this.toastMessage).toBeVisible();
         
         if (message === 'Fail') {
@@ -19,14 +21,17 @@ export class Notification {
         } else {
             await expect(this.toastMessage).toContainText('Logout successfully!');
         }
+        logger.info('Login notification verified', { message });
     }
 
     async expectProductActionMessage(action: 'Created' | 'Updated' | 'Deleted') {
         try {
             await expect(this.toastMessage).toBeVisible();
         } catch {
+            logger.error(`Expected toast message for action '${action}' not found.`);
             return;
         }
         await expect(this.toastMessage).toHaveText(`${action} successfully`);
+        logger.info('Product action notification verified', { action });
     }
 }

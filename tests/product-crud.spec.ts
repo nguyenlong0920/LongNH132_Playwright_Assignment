@@ -27,6 +27,9 @@ test('TC-09 - Create product with mandatory fields @crud @regression', async ({
     await notification.expectProductActionMessage('Created');
 
     await productPage.expectProductInList(product);
+    await productPage.cleanupProduct(product);
+
+    await notification.expectProductActionMessage('Deleted');
 });
 
 test('TC-10 - Create product with dynamic product name and SKU @crud @data', async ({
@@ -59,6 +62,11 @@ test('TC-10 - Create product with dynamic product name and SKU @crud @data', asy
 
     // Verify that the two products are unique
     await productPage.expectProductsAreUnique(products[0], products[1]);
+
+    for (const product of products) {
+        await productPage.cleanupProduct(product);
+        await notification.expectProductActionMessage('Deleted');
+    }   
 });
 
 test('TC-11 - Search product by name @crud @regression', async ({
@@ -87,6 +95,10 @@ test('TC-11 - Search product by name @crud @regression', async ({
     await productPage.expectProductInList(product);
     await productPage.searchProductByName(product);
     await productPage.verifySearchProduct(product);
+
+    await productPage.cleanupProduct(product);
+    
+    await notification.expectProductActionMessage('Deleted');
 });
 
 test('TC-12 - Update product price @crud @regression', async ({
@@ -123,6 +135,10 @@ test('TC-12 - Update product price @crud @regression', async ({
     await notification.expectProductActionMessage('Updated');
 
     await productPage.verifySearchProduct(product);
+
+    await productPage.cleanupProduct(product);
+
+    await notification.expectProductActionMessage('Deleted');
 });
 
 test('TC-13 - Delete created product @crud @cleanup', async ({

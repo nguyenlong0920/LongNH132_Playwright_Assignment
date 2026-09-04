@@ -1,5 +1,6 @@
 import { Locator, Page, expect } from '@playwright/test';
 import { ProductData } from '../data/factories/ProductFactory';
+import { logger } from '../utils/logger';
 
 export class CreateProductPage {
     readonly page: Page;
@@ -31,6 +32,12 @@ export class CreateProductPage {
     }
 
     async inputProductDetails(product: ProductData) {
+        logger.debug('Filling product form', {
+            name: product.name,
+            sku: product.sku,
+            price: product.price,
+        });
+
         await this.productNameInput.fill(product.name);
         await this.productLinkInput.fill(product.name);
         await this.productSkuInput.fill(product.sku);
@@ -42,6 +49,7 @@ export class CreateProductPage {
     }
 
     async saveAndExit() {
+        logger.info('Submitting product form');
         await this.saveExitButton.click();
     }
 

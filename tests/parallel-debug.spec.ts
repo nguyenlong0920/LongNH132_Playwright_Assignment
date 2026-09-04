@@ -9,6 +9,7 @@ test.describe('TC-19 - Run independent product tests in parallel @parallel', () 
         leftMenu,
         productPage,
         createProductPage,
+        notification,
     }) => {
         const product = ProductFactory.create();
 
@@ -23,8 +24,9 @@ test.describe('TC-19 - Run independent product tests in parallel @parallel', () 
 
         await productPage.expectProductInList(product);
 
-        await productPage.clickDeleteProductButton(product);
-        await productPage.confirmDeleteProduct();
+        await productPage.cleanupProduct(product);
+
+        await notification.expectProductActionMessage('Deleted');
     });
 
     test('TC-19.2 - Create independent product B', async ({
@@ -33,6 +35,7 @@ test.describe('TC-19 - Run independent product tests in parallel @parallel', () 
         leftMenu,
         productPage,
         createProductPage,
+        notification,
     }) => {
         const product = ProductFactory.create();
 
@@ -47,8 +50,9 @@ test.describe('TC-19 - Run independent product tests in parallel @parallel', () 
 
         await productPage.expectProductInList(product);
 
-        await productPage.clickDeleteProductButton(product);
-        await productPage.confirmDeleteProduct();
+        await productPage.cleanupProduct(product);
+
+        await notification.expectProductActionMessage('Deleted');
     });
 });
 

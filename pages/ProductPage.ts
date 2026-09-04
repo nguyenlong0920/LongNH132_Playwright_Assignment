@@ -1,5 +1,6 @@
 import { Locator, Page, expect } from '@playwright/test';
 import { ProductData } from '../data/factories/ProductFactory';
+import { logger } from '../utils/logger';
 import { WaitHelper } from '../utils/waitHelper';
 
 export class ProductPage {
@@ -52,6 +53,7 @@ export class ProductPage {
     }
 
     async createProductWithType(productType: 'physical' | 'digital') {
+        logger.info('Opening product creation form', { productType });
         await this.waitForTableData();
         await expect(this.createButton).toBeVisible();
         await this.createButton.click();
@@ -64,6 +66,11 @@ export class ProductPage {
     }
 
     async expectProductInList(product: ProductData) {
+        logger.debug('Verifying product is visible in the list', {
+            name: product.name,
+            sku: product.sku,
+            price: product.price,
+        });
         await this.waitForTableData();
 
         const productRow = this.listProductRow
@@ -73,6 +80,7 @@ export class ProductPage {
 
         await expect(productRow).toHaveCount(1);
         await expect(productRow).toBeVisible();
+        logger.debug('Product is visible in the list', { name: product.name, sku: product.sku });
     }
 
     async expectProductsAreUnique(firstProduct: ProductData, secondProduct: ProductData,) {
@@ -84,6 +92,11 @@ export class ProductPage {
     }
 
     async searchProductByName(product: ProductData) {
+        logger.debug('Searching for product', {
+            name: product.name,
+            sku: product.sku,
+        });
+
         await this.searchProductInput.fill(product.name);
         await this.searchProductInput.press('Enter');
         await this.waitHelper.waitForTableReady();
@@ -97,17 +110,28 @@ export class ProductPage {
     }
 
     async verifySearchProduct(product: ProductData) {
+        logger.debug('Verifying product search result', { name: product.name, sku: product.sku });
         await expect(this.listProductName).toHaveText(product.name);
         await expect(this.listProductSKU).toHaveText(product.sku);
         await this.verifyProductPrice(product);
     }
 
     async clickEditProductButton(product: ProductData) {
+        logger.info('Opening product for editing', {
+            name: product.name,
+            sku: product.sku,
+        });
+
         await this.searchProductByName(product);
         await this.editProductButton.click()
     }
 
     async clickDeleteProductButton(product: ProductData) {
+        logger.info('Deleting product', {
+            name: product.name,
+            sku: product.sku,
+        });
+
         await this.searchProductByName(product);
         await this.deleteProductButton.click();
     }
@@ -115,5 +139,13 @@ export class ProductPage {
     async confirmDeleteProduct() {
         await this.confirmDeleteButton.click();
         await expect(this.listProductRow).toHaveText('No record');
+        logger.info('Product deletion confirmed');
+    }
+
+    async cleanupProduct(product: ProductData) {
+        logger.info('Starting product cleanup', { name: product.name, sku: product.sku });
+        await this.clickDeleteProductButton(product);
+        await this.confirmDeleteProduct();
+        logger.info('Product cleanup completed', { name: product.name, sku: product.sku });
     }
 }

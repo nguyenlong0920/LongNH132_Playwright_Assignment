@@ -11,8 +11,8 @@ export class ProductFactory {
         const id = randomUUID().replace(/-/g, '').slice(0, 8);
 
         return {
-            name: `Test Product ${id}`,
-            sku: `TEST-SKU-${id}`,
+            name: `PW Product ${id}`,
+            sku: `PW-${id}`,
             price: `100.00`,
         };
     }
