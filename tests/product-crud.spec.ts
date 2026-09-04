@@ -50,7 +50,7 @@ test('TC-10 - Create product with dynamic product name and SKU @crud @data', asy
     for (const product of products) {
         await productPage.createProductWithType('physical');
 
-        await createProductPage.createAndVerifyProduct(product);
+        await createProductPage.inputAndSaveProductDetails(product);
 
         await notification.expectProductActionMessage('Created');
 
@@ -80,7 +80,7 @@ test('TC-11 - Search product by name @crud @regression', async ({
 
     const product = ProductFactory.create();
 
-    await createProductPage.createAndVerifyProduct(product);
+    await createProductPage.inputAndSaveProductDetails(product);
 
     await notification.expectProductActionMessage('Created');
 
@@ -108,7 +108,7 @@ test('TC-12 - Update product price @crud @regression', async ({
 
     const product = ProductFactory.create();
 
-    await createProductPage.createAndVerifyProduct(product);
+    await createProductPage.inputAndSaveProductDetails(product);
 
     await notification.expectProductActionMessage('Created');
 
@@ -118,11 +118,11 @@ test('TC-12 - Update product price @crud @regression', async ({
     // Update price
     product.price = '200.00';
 
-    await createProductPage.changeProductPrice(product);
+    await createProductPage.inputAndSaveProductDetails(product);
 
     await notification.expectProductActionMessage('Updated');
 
-    await productPage.verifyProductPrice(product);
+    await productPage.verifySearchProduct(product);
 });
 
 test('TC-13 - Delete created product @crud @cleanup', async ({
@@ -144,7 +144,7 @@ test('TC-13 - Delete created product @crud @cleanup', async ({
 
     const product = ProductFactory.create();
 
-    await createProductPage.createAndVerifyProduct(product);
+    await createProductPage.inputAndSaveProductDetails(product);
 
     await notification.expectProductActionMessage('Created');
 

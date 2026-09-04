@@ -22,7 +22,7 @@ test('TC-16 - Create multiple products using data factory @data @regression', as
     for (const product of products) {
         await productPage.createProductWithType('physical');
 
-        await createProductPage.createAndVerifyProduct(product);
+        await createProductPage.inputAndSaveProductDetails(product);
 
         await notification.expectProductActionMessage('Created');
 

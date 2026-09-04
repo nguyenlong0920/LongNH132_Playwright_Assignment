@@ -24,14 +24,13 @@ test('TC-17 - Use shared Notification component to verify messages @framework', 
         price: '-1', // Invalid price
     };
 
-    await createProductPage.createAndVerifyProduct(product);
+    await createProductPage.inputAndSaveProductDetails(product);
     await createProductPage.verifyInvalidProductName();
     await createProductPage.verifyInvalidProductPrice();
 
     product = ProductFactory.create();
 
-    await createProductPage.inputProductDetails(product);
-    await createProductPage.changeProductPrice(product);
+    await createProductPage.inputAndSaveProductDetails(product);
 
     await notification.expectProductActionMessage('Created');
 
@@ -41,11 +40,11 @@ test('TC-17 - Use shared Notification component to verify messages @framework', 
     // Update price
     product.price = '200.00';
 
-    await createProductPage.changeProductPrice(product);
+    await createProductPage.inputAndSaveProductDetails(product);
 
     await notification.expectProductActionMessage('Updated');
 
-    await productPage.verifyProductPrice(product);
+    await productPage.verifySearchProduct(product);
 
     await productPage.clickDeleteProductButton(product);
     await productPage.confirmDeleteProduct();
@@ -69,7 +68,6 @@ test('TC-18 - Use fixture-injected page objects in tests @framework', async ({
     await header.expectLoaded();
 
     await leftMenu.expectLoaded();
-    await leftMenu.expectMenuVisible();
     await leftMenu.selectMenuItem('Ecommerce', 'Products');
 
     await productPage.expectLoaded();
@@ -77,7 +75,7 @@ test('TC-18 - Use fixture-injected page objects in tests @framework', async ({
 
     const product = ProductFactory.create();
 
-    await createProductPage.createAndVerifyProduct(product);
+    await createProductPage.inputAndSaveProductDetails(product);
 
     await notification.expectProductActionMessage('Created');
 

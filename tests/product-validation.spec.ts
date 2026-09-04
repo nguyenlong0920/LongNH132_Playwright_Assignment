@@ -22,7 +22,7 @@ test('TC-14 - Validate required fields on create product form @negative', async 
     // Leave mandatory fields blank
     product.name = '';
 
-    await createProductPage.createAndVerifyProduct(product);
+    await createProductPage.inputAndSaveProductDetails(product);
     await createProductPage.verifyInvalidProductName();
 });
 
@@ -47,6 +47,6 @@ test('TC-15 - Validate invalid price input @negative', async ({
     // Invalid price
     product.price = '-1';
 
-    await createProductPage.createAndVerifyProduct(product);
+    await createProductPage.inputAndSaveProductDetails(product);
     await createProductPage.verifyInvalidProductPrice();
 });

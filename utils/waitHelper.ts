@@ -3,21 +3,31 @@ import { Locator, Page, expect } from '@playwright/test';
 export class WaitHelper {
     readonly page: Page;
 
-    readonly spinneer: Locator;
-    readonly tableSpinnet: Locator;
+    readonly spinner: Locator;
+    readonly tableSpinner: Locator;
 
     constructor(page: Page) {
         this.page = page;
 
-        this.spinneer = page.locator('.loading-spinner');
-        this.tableSpinnet = page.locator('#botble-ecommerce-tables-product-table_processing');
+        this.spinner = page.locator('.loading-spinner');
+        this.tableSpinner = page.locator('#botble-ecommerce-tables-product-table_processing');
     }
 
     async waitForReady () {
-        await expect(this.spinneer).toHaveCount(0, { timeout: 20000 });
+        try {
+            await expect(this.spinner).toBeVisible();
+        } catch {
+            return;
+        }
+        await expect(this.spinner).toHaveCount(0);
     }
 
     async waitForTableReady () {
-        await expect(this.tableSpinnet).toBeHidden({ timeout: 20000 });
+        try {
+            await expect(this.tableSpinner).toBeVisible();
+        } catch {
+            return;
+        }
+        await expect(this.tableSpinner).toBeHidden();
     }
 }

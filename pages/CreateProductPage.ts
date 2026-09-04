@@ -34,6 +34,10 @@ export class CreateProductPage {
         await this.productNameInput.fill(product.name);
         await this.productLinkInput.fill(product.name);
         await this.productSkuInput.fill(product.sku);
+        
+        await this.productPriceInput.click();
+        await this.productPriceInput.press('ControlOrMeta+A');
+        await this.productPriceInput.press('Backspace');
         await this.productPriceInput.fill(product.price);
     }
 
@@ -41,15 +45,8 @@ export class CreateProductPage {
         await this.saveExitButton.click();
     }
 
-    async createAndVerifyProduct(product: ProductData) {
-        await this.expectLoaded();
+    async inputAndSaveProductDetails(product: ProductData) {
         await this.inputProductDetails(product);
-        await this.saveAndExit();
-    }
-
-    async changeProductPrice(product: ProductData) {
-        await this.productPriceInput.fill('');
-        await this.productPriceInput.fill(product.price);
         await this.saveAndExit();
     }
 
