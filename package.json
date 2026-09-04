@@ -13,6 +13,8 @@
     "test:headed": "playwright test --project=chromium --headed",
     "test:debug": "PWDEBUG=1 playwright test --project=chromium",
     "test:logs": "LOG_LEVEL=DEBUG playwright test",
+    "test:bdd": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber-js --config cucumber.mjs",
+    "test:bdd:parallel": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber-js --config cucumber.mjs --tags @parallel --parallel 2",
     "test:trace": "playwright test --trace on",
     "test:failed": "playwright test --last-failed",
     "report": "playwright show-report",

@@ -2,6 +2,8 @@
 
 Playwright + TypeScript automation framework for the Shofy Admin demo application. The suite covers authentication, dashboard validation, product CRUD, validation, test-data management, fixtures, parallel execution, and debugging artifacts.
 
+Repository: [LongNH132_Playwright_Assignment](https://github.com/nguyenlong0920/LongNH132_Playwright_Assignment)
+
 ## Scope
 
 - Login: valid login, invalid credentials, required-field validation, and logout
@@ -25,8 +27,8 @@ Create or update the environment file used for the target environment:
 
 ```env
 BASE_URL=http://shofy.botble.com
-ADMIN_USERNAME=admin
-ADMIN_PASSWORD=12345678
+ADMIN_USERNAME=your-username
+ADMIN_PASSWORD=your-password
 ```
 
 The default environment is `.env.dev`. To run with another environment file, pass `ENV_FILE`:
@@ -50,6 +52,12 @@ npx playwright test --grep @parallel
 
 # Run with all logger levels, including DEBUG
 npm run test:logs
+
+# Run the separate Cucumber BDD scenario for TC-17
+npm run test:bdd
+
+# Run independent Cucumber scenarios with two workers
+npm run test:bdd:parallel
 
 # Run a single browser or spec file
 npx playwright test --project=chromium
