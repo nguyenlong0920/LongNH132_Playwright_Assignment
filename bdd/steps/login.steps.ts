@@ -1,6 +1,5 @@
 import { Given, Then, When } from '@cucumber/cucumber';
 import { users } from '../../data/static/users';
-import { bddEnv } from '../support/env';
 import { BddWorld } from '../support/world';
 
 Given('the admin login page is open', async function (this: BddWorld) {
@@ -9,18 +8,22 @@ Given('the admin login page is open', async function (this: BddWorld) {
 });
 
 Given('the admin is logged in', async function (this: BddWorld) {
-    await this.loginPage.open();
-    await this.loginPage.expectLoaded();
-    await this.loginPage.login(bddEnv.adminUsername, bddEnv.adminPassword);
+    await this.loginPage.loginFullFlow();
     await this.dashboardPage.expectLoaded();
 });
 
 When('the admin signs in with valid credentials', async function (this: BddWorld) {
-    await this.loginPage.login(bddEnv.adminUsername, bddEnv.adminPassword);
+    await this.loginPage.login(
+        users.admin.username,
+        users.admin.password,
+    );
 });
 
 When('the admin signs in with an invalid password', async function (this: BddWorld) {
-    await this.loginPage.login(bddEnv.adminUsername, users.invalidPassword.password);
+    await this.loginPage.login(
+        users.admin.username,
+        users.invalidPassword.password,
+    );
 });
 
 When('the admin submits the login form without credentials', async function (this: BddWorld) {
@@ -28,6 +31,8 @@ When('the admin submits the login form without credentials', async function (thi
 });
 
 When('the admin logs out', async function (this: BddWorld) {
+    await this.header.expectLoaded();
+    await this.header.expectUserMenuVisible();
     await this.header.logout();
 });
 

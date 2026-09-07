@@ -1,5 +1,6 @@
-import { Locator, Page, expect } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
 import { WaitHelper } from '../utils/waitHelper';
+import { expect } from '../utils/config';
 
 export class DashboardPage {
     readonly page: Page;

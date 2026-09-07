@@ -1,5 +1,18 @@
-import { setWorldConstructor, World, type IWorldOptions } from '@cucumber/cucumber';
-import { chromium, type Browser, type BrowserContext, type Page } from '@playwright/test';
+import {
+    setWorldConstructor,
+    World,
+    type IWorldOptions,
+} from '@cucumber/cucumber';
+
+import {
+    chromium,
+    firefox,
+    webkit,
+    type Browser,
+    type BrowserContext,
+    type Page,
+} from '@playwright/test';
+
 import { CreateProductPage } from '../../pages/CreateProductPage';
 import { DashboardPage } from '../../pages/DashboardPage';
 import { LoginPage } from '../../pages/LoginPage';
@@ -8,12 +21,13 @@ import { Header } from '../../components/Header';
 import { LeftMenu } from '../../components/LeftMenu';
 import { Notification } from '../../components/Notification';
 import { type ProductData } from '../../data/factories/ProductFactory';
-import { bddEnv } from './env';
+import { env } from '../../utils/env';
 
 export class BddWorld extends World {
     browser?: Browser;
     context?: BrowserContext;
     page!: Page;
+
     loginPage!: LoginPage;
     dashboardPage!: DashboardPage;
     header!: Header;
@@ -21,6 +35,7 @@ export class BddWorld extends World {
     productPage!: ProductPage;
     createProductPage!: CreateProductPage;
     notification!: Notification;
+
     product?: ProductData;
     products: ProductData[] = [];
 
@@ -28,13 +43,32 @@ export class BddWorld extends World {
         super(options);
     }
 
-    async startBrowser() {
-        this.browser = await chromium.launch({
+    async startBrowser(): Promise<void> {
+        const browserType = process.env.BDD_BROWSER ?? 'chromium';
+
+        const browserTypes = {
+            chromium,
+            firefox,
+            webkit,
+        } as const;
+
+        const selectedBrowser = browserTypes[browserType as keyof typeof browserTypes];
+
+        if (!selectedBrowser) {
+            throw new Error(
+                `Unsupported BDD_BROWSER: ${browserType}. ` +
+                `Expected chromium, firefox, or webkit.`,
+            );
+        }
+
+        this.browser = await selectedBrowser.launch({
             headless: process.env.HEADED !== 'true',
         });
+
         this.context = await this.browser.newContext({
-            baseURL: bddEnv.baseUrl,
+            baseURL: env.baseUrl,
         });
+
         this.page = await this.context.newPage();
 
         this.loginPage = new LoginPage(this.page);
@@ -46,35 +80,43 @@ export class BddWorld extends World {
         this.notification = new Notification(this.page);
     }
 
-    trackProduct(product: ProductData) {
+    trackProduct(product: ProductData): void {
         this.product = product;
         this.products.push(product);
     }
 
-    forgetProduct(product: ProductData) {
-        this.products = this.products.filter((trackedProduct) => trackedProduct.sku !== product.sku);
+    forgetProduct(product: ProductData): void {
+        this.products = this.products.filter(
+            (trackedProduct) => trackedProduct.sku !== product.sku,
+        );
+
         if (this.product?.sku === product.sku) {
             this.product = undefined;
         }
     }
 
-    async cleanupCreatedProducts() {
-        if (this.products.length === 0) {
+    async cleanupCreatedProducts(): Promise<void> {
+        if (!this.page || this.products.length === 0) {
             return;
         }
 
         await this.page.goto('/admin/ecommerce/products');
         await this.productPage.expectLoaded();
+
         for (const product of [...this.products].reverse()) {
             await this.productPage.cleanupProduct(product);
         }
+
         this.products = [];
         this.product = undefined;
     }
 
-    async closeBrowser() {
+    async closeBrowser(): Promise<void> {
         await this.context?.close();
         await this.browser?.close();
+
+        this.context = undefined;
+        this.browser = undefined;
     }
 }
 

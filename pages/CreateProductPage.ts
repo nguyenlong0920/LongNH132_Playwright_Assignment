@@ -1,6 +1,7 @@
-import { Locator, Page, expect } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
 import { ProductData } from '../data/factories/ProductFactory';
 import { logger } from '../utils/logger';
+import { expect } from '../utils/config';
 
 export class CreateProductPage {
     readonly page: Page;
@@ -31,6 +32,12 @@ export class CreateProductPage {
         await expect(this.page).toHaveURL(/\/admin\/ecommerce\/products\/create$/);
     }
 
+    private async cleanInputField(input: Locator) {
+        await input.click();
+        await input.press('ControlOrMeta+A');
+        await input.press('Backspace');
+    }
+
     async inputProductDetails(product: ProductData) {
         logger.debug('Filling product form', {
             name: product.name,
@@ -38,13 +45,14 @@ export class CreateProductPage {
             price: product.price,
         });
 
+        await this.productNameInput.fill('test');
+        await this.cleanInputField(this.productNameInput);
         await this.productNameInput.fill(product.name);
+
         await this.productLinkInput.fill(product.name);
         await this.productSkuInput.fill(product.sku);
         
-        await this.productPriceInput.click();
-        await this.productPriceInput.press('ControlOrMeta+A');
-        await this.productPriceInput.press('Backspace');
+        await this.cleanInputField(this.productPriceInput);
         await this.productPriceInput.fill(product.price);
     }
 

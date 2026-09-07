@@ -21,6 +21,7 @@ Repository: [LongNH132_Playwright_Assignment](https://github.com/nguyenlong0920/
 ```bash
 npm install
 npx playwright install
+npm install -D concurrently
 ```
 
 Create or update the environment file used for the target environment:
@@ -56,8 +57,11 @@ npm run test:logs
 # Run the separate Cucumber BDD scenario for TC-17
 npm run test:bdd
 
-# Run independent Cucumber scenarios with two workers
-npm run test:bdd:parallel
+# Run Cucumber in headed mode
+npm run test:bdd:headed
+
+# Run the Cucumber BDD suite across Chromium, Firefox, and WebKit in parallel
+npm run test:bdd:full
 
 # Run a single browser or spec file
 npx playwright test --project=chromium

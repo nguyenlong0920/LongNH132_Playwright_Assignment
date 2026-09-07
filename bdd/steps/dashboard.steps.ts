@@ -12,6 +12,7 @@ Then('the left navigation menu is displayed', async function (this: BddWorld) {
 
 When('the admin opens the user menu', async function (this: BddWorld) {
     await this.header.expectLoaded();
+    await this.header.expectUserMenuVisible();
     await this.header.openUserMenu();
 });
 

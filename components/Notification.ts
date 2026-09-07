@@ -1,5 +1,6 @@
-import { Locator, Page, expect } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
 import { logger } from '../utils/logger';
+import { expect } from '../utils/config';
 
 export class Notification {
     readonly page: Page;

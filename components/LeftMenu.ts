@@ -1,5 +1,6 @@
-import { Locator, Page, expect } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
 import { leftMenu } from '../data/static/sideMenu';
+import { expect } from '../utils/config';
 
 export class LeftMenu {
     readonly page: Page;

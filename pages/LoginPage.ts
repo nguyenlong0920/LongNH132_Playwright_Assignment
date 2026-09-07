@@ -1,6 +1,7 @@
-import { Locator, Page, expect } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
 import { users } from '../data/static/users';
 import { logger } from '../utils/logger';
+import { expect } from '../utils/config';
 
 export class LoginPage {
     readonly page: Page;

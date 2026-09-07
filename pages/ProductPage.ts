@@ -1,7 +1,8 @@
-import { Locator, Page, expect } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
 import { ProductData } from '../data/factories/ProductFactory';
 import { logger } from '../utils/logger';
 import { WaitHelper } from '../utils/waitHelper';
+import { expect } from '../utils/config';
 
 export class ProductPage {
     readonly page: Page;

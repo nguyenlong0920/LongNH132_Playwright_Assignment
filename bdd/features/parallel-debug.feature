@@ -1,8 +1,8 @@
-@bdd
+@bdd @parallel-debug
 Feature: Parallel execution and debugging
 
     @parallel @tc19
-    Scenario Outline: Create an independent product in parallel
+    Scenario Outline: TC-19 Create an independent product in parallel
         Given the admin is on the Products list page
         When parallel worker "<worker>" saves a generated product
         Then the generated product is visible in the list
@@ -10,12 +10,12 @@ Feature: Parallel execution and debugging
         Then a product deleted notification is displayed
 
         Examples:
-        | worker |
-        | A      |
-        | B      |
+            | worker |
+            | A      |
+            | B      |
 
     @debugging @tc20
-    Scenario: Capture artifacts for a controlled debugging failure
+    Scenario: TC-20 Capture trace, screenshot, and video on failure
         Given the admin is logged in
-        And the dashboard page is displayed
+        Then the dashboard page is displayed
         When a controlled debugging failure is enabled

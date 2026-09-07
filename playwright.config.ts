@@ -1,9 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
-import dotenv from 'dotenv';
-
-dotenv.config({
-    path: process.env.ENV_FILE || '.env.dev',
-});
+import { env } from './utils/env';
 
 export default defineConfig({
     testDir: './tests',
@@ -16,17 +12,13 @@ export default defineConfig({
 
     timeout: 120_000,
 
-    expect: {
-        timeout: 20_000,
-    },
-
     reporter: [['html', {
         outputFolder: 'playwright-report',
         open: 'never',
     }]],
 
     use: {
-        baseURL: process.env.BASE_URL,
+        baseURL: env.baseUrl,
 
         trace: 'on-first-retry',
 
