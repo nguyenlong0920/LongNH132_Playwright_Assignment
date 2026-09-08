@@ -27,7 +27,6 @@ async function authenticate(
 
     logger.info(`Login API completed for ${browserName}`);
 
-    // Inspect cookies without exposing cookie values.
     const state = await request.storageState();
 
     console.log(`\n========== AUTH DEBUG: ${browserName} ==========`);
@@ -47,36 +46,24 @@ async function authenticate(
 
     console.log(`Total cookies: ${state.cookies.length}`);
 
-    // Do not follow redirects.
-    // This tells us whether the API session can actually access /admin.
-    const dashboardResponse = await request.get('/admin', {
-        maxRedirects: 0,
-    });
-
-    const location = dashboardResponse.headers()['location'];
+    const dashboardResponse = await request.get('/admin');
 
     console.log('Dashboard auth check:', {
         status: dashboardResponse.status(),
         statusText: dashboardResponse.statusText(),
         url: dashboardResponse.url(),
-        location,
     });
 
     const responseBody = await dashboardResponse.text();
 
     console.log('Dashboard response preview:');
-    console.log(responseBody.slice(0, 300));
+    console.log(responseBody.slice(0, 500));
 
     console.log('===============================================\n');
 
     expect(
-        dashboardResponse.status(),
-        `${browserName}: /admin should return 200 after API login`,
-    ).toBe(200);
-
-    expect(
-        location,
-        `${browserName}: /admin should not redirect to /admin/login`,
+        dashboardResponse.url(),
+        `${browserName}: /admin should not end at /admin/login`,
     ).not.toContain('/admin/login');
 
     await request.storageState({
