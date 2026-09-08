@@ -39,8 +39,13 @@ export class CreateProductPage {
 
     private async cleanInputField(input: Locator) {
         await input.click();
-        await input.press('ControlOrMeta+A');
-        await input.press('Backspace');
+
+        while (await input.inputValue() !== '') {
+            if (await input.inputValue() === '0') {
+                await input.press('ArrowRight');
+            }
+            await input.press('Backspace');
+        }
     }
 
     async inputProductDetails(product: ProductData) {
