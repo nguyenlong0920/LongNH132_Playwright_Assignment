@@ -32,7 +32,7 @@ export class LoginPage {
     }
 
     async expectLoaded() {
-        await expect(this.page).toHaveURL(/\/admin/);
+        await expect(this.page).toHaveURL(/\/admin\/login/);
         await expect(this.loginForm).toBeVisible();
         await expect(this.usernameInput).toBeVisible();
         await expect(this.passwordInput).toBeVisible();

@@ -4,63 +4,44 @@ import { ProductFactory } from '../data/factories/ProductFactory';
 test.describe('TC-19 - Run independent product tests in parallel @parallel', () => {
 
     test('TC-19.1 - Create independent product A', async ({
-        loginPage,
-        dashboardPage,
-        leftMenu,
+        productApi,
         productPage,
-        createProductPage,
-        notification,
     }) => {
         const product = ProductFactory.create();
 
-        await loginPage.loginFullFlow();
-        await dashboardPage.expectLoaded();
+        await productApi.create(product);
 
-        await leftMenu.selectMenuItem('Ecommerce', 'Products');
+        await productPage.open();
         await productPage.expectLoaded();
 
-        await productPage.createProductWithType('physical');
-        await createProductPage.inputAndSaveProductDetails(product);
+        await productPage.searchProductByName(product);
+        await productPage.verifySearchProduct(product);
 
-        await productPage.expectProductInList(product);
-
-        await productPage.cleanupProduct(product);
-
-        await notification.expectProductActionMessage('Deleted');
+        await productApi.delete(product);
     });
 
     test('TC-19.2 - Create independent product B', async ({
-        loginPage,
-        dashboardPage,
-        leftMenu,
+        productApi,
         productPage,
-        createProductPage,
-        notification,
     }) => {
         const product = ProductFactory.create();
 
-        await loginPage.loginFullFlow();
-        await dashboardPage.expectLoaded();
+        await productApi.create(product);
 
-        await leftMenu.selectMenuItem('Ecommerce', 'Products');
+        await productPage.open();
         await productPage.expectLoaded();
 
-        await productPage.createProductWithType('physical');
-        await createProductPage.inputAndSaveProductDetails(product);
+        await productPage.searchProductByName(product);
+        await productPage.verifySearchProduct(product);
 
-        await productPage.expectProductInList(product);
-
-        await productPage.cleanupProduct(product);
-
-        await notification.expectProductActionMessage('Deleted');
+        await productApi.delete(product);
     });
 });
 
 test('TC-20 - Capture trace, screenshot, and video on failure @debugging', async ({
-    loginPage,
     dashboardPage,
 }) => {
-    await loginPage.loginFullFlow();
+    await dashboardPage.open();
     await dashboardPage.expectLoaded();
 
     if (process.env.DEBUG_FAILURE === 'true') {

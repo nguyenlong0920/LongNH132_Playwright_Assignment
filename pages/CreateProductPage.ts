@@ -28,6 +28,11 @@ export class CreateProductPage {
         this.productPriceError = page.locator('#price-error');
     }
 
+    async open() {
+        logger.info('Opening create product page');
+        await this.page.goto('/admin/ecommerce/products/create');
+    }
+
     async expectLoaded() {
         await expect(this.page).toHaveURL(/\/admin\/ecommerce\/products\/create$/);
     }

@@ -1,7 +1,7 @@
 import { test } from '../fixtures/pageFixtures';
 import { users } from '../data/static/users';
 
-test.describe.configure({ mode: 'serial' });
+test.use({ storageState: { cookies: [], origins: [] } });
 
 test('TC-01 - Valid admin login @smoke', async ({
     loginPage,

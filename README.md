@@ -27,7 +27,7 @@ npm install -D concurrently
 Create or update the environment file used for the target environment:
 
 ```env
-BASE_URL=http://shofy.botble.com
+BASE_URL=https://shofy.botble.com
 ADMIN_USERNAME=your-username
 ADMIN_PASSWORD=your-password
 ```

@@ -20,7 +20,7 @@ export default defineConfig({
     use: {
         baseURL: env.baseUrl,
 
-        trace: 'on-first-retry',
+        trace: 'retain-on-failure',
 
         screenshot: 'only-on-failure',
 
@@ -29,16 +29,35 @@ export default defineConfig({
 
     projects: [
         {
-            name: 'chromium',
-            use: { ...devices['Desktop Chrome'] },
+            name: 'setup',
+            testMatch: /auth\.setup\.ts/,
         },
+
+        {
+            name: 'chromium',
+            dependencies: ['setup'],
+            use: {
+                ...devices['Desktop Chrome'],
+                storageState: 'playwright/.auth/admin.json',
+            },
+        },
+
         {
             name: 'firefox',
-            use: { ...devices['Desktop Firefox'] },
+            dependencies: ['setup'],
+            use: {
+                ...devices['Desktop Firefox'],
+                storageState: 'playwright/.auth/admin.json',
+            },
         },
+
         {
             name: 'webkit',
-            use: { ...devices['Desktop Safari'] },
+            dependencies: ['setup'],
+            use: {
+                ...devices['Desktop Safari'],
+                storageState: 'playwright/.auth/admin.json',
+            },
         },
     ],
 });

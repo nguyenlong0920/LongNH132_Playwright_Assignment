@@ -1,6 +1,7 @@
 import { Locator, Page } from '@playwright/test';
 import { WaitHelper } from '../utils/waitHelper';
 import { expect } from '../utils/config';
+import { logger } from '../utils/logger';
 
 export class DashboardPage {
     readonly page: Page;
@@ -13,6 +14,11 @@ export class DashboardPage {
         this.waitHelper = new WaitHelper(page);
         
         this.dashboardHeading = page.locator('#sidebar-menu-main + div h1');
+    }
+
+    async open() {
+        logger.info('Opening dashboard page');
+        await this.page.goto('/admin');
     }
 
     async expectLoaded() {

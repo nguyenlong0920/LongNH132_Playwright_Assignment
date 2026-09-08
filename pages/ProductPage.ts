@@ -45,6 +45,11 @@ export class ProductPage {
         this.confirmDeleteButton = page.locator('button.confirm-trigger-single-action-button');
     }
 
+    async open() {
+        logger.info('Opening product page');
+        await this.page.goto('/admin/ecommerce/products');
+    }
+
     async expectLoaded() {
         await expect(this.page).toHaveURL(/\/admin\/ecommerce\/products$/);
     }
