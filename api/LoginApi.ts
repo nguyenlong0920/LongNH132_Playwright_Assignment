@@ -17,23 +17,6 @@ export class LoginApi {
             },
         });
 
-        console.log('\n========== LOGIN DEBUG ==========');
-
-        console.log({
-            status: response.status(),
-            statusText: response.statusText(),
-            url: response.url(),
-            location: response.headers()['location'],
-            hasSetCookie: Boolean(response.headers()['set-cookie']),
-        });
-
-        const body = await response.text();
-
-        console.log('Response body preview:');
-        console.log(body.slice(0, 500));
-
-        console.log('=================================\n');
-
         await expect(response).toBeOK();
 
         logger.info('API login successful');
