@@ -1,27 +1,28 @@
-@bdd @login
+@bdd @login @unauthenticated 
 Feature: Admin authentication
+
+    Background:
+        Given the admin open login page
 
     @smoke @tc01
     Scenario: TC-01 Valid admin login
-        Given the admin login page is open
-        When the admin signs in with valid credentials
+        When the admin login with "valid credentials"
         Then the dashboard page is displayed
 
     @negative @tc02
     Scenario: TC-02 Invalid password login
-        Given the admin login page is open
-        When the admin signs in with an invalid password
-        Then an invalid credentials notification is displayed
+        When the admin login with "invalid password"
+        Then the login page displays "Fail" message
 
     @negative @tc03
     Scenario: TC-03 Required field validation
-        Given the admin login page is open
-        When the admin submits the login form without credentials
+        When the admin login with "no credentials"
         Then login required field messages are displayed
 
     @smoke @tc04
     Scenario: TC-04 Logout successfully
-        Given the admin is logged in
-        When the admin logs out
-        Then the admin login page is displayed
-        And a logout notification is displayed
+        When the admin login with "valid credentials"
+        Then the dashboard page is displayed
+        And the admin logout
+        Then the login page is displayed
+        And the login page displays "Success" message

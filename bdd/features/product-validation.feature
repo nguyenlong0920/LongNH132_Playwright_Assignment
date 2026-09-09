@@ -2,20 +2,14 @@
 Feature: Product validation
 
     Background:
-        Given the admin is on the Products list page
-
+        Given the admin go to create product page
+        
     @negative @tc14
     Scenario: TC-14 Validate required fields on product creation
-        Given the admin opens the physical product creation form
-        When the admin submits a product without a name
-        Then the product name validation message is displayed
+        When the admin submits a product with "empty name"
+        Then the product "name" validation message is displayed
 
     @negative @tc15
-    Scenario Outline: TC-15 Validate an invalid product price
-        Given the admin opens the physical product creation form
-        When the admin submits a product with an invalid price of "<invalidPrice>"
-        Then the product price validation message is displayed
-
-        Examples:
-            | invalidPrice |
-            | -1           |
+    Scenario: TC-15 Validate an invalid product price
+        When the admin submits a product with "invalid price"
+        Then the product "price" validation message is displayed

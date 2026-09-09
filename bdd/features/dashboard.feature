@@ -2,7 +2,7 @@
 Feature: Dashboard validation
 
     Background:
-        Given the admin is logged in
+        Given the admin go to dashboard page
 
     @smoke @tc05
     Scenario: TC-05 Dashboard page loaded after login
@@ -14,5 +14,5 @@ Feature: Dashboard validation
 
     @regression @tc07
     Scenario: TC-07 Header profile area visibility
-        When the admin opens the user menu
-        Then the profile menu is displayed
+        Then the dashboard header is displayed
+        And the profile menu is displayed

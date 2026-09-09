@@ -18,9 +18,10 @@
     "test:failed": "playwright test --last-failed",
     "report": "playwright show-report",
 
-    "test:bdd": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber-js --config cucumber.mjs",
-    "test:bdd:headed": "HEADED=true npm run test:bdd -- --retry 0 --parallel 1",
-    "test:bdd:full": "concurrently \"BDD_BROWSER=chromium npm run test:bdd\" \"BDD_BROWSER=firefox npm run test:bdd\" \"BDD_BROWSER=webkit npm run test:bdd\""
+    "auth:setup": "npx playwright test --project=setup",
+    "test:bdd": "npm run auth:setup && concurrently \"BDD_BROWSER=chromium npm run test:bdd:run\" \"BDD_BROWSER=firefox npm run test:bdd:run\" \"BDD_BROWSER=webkit npm run test:bdd:run\"",
+    "test:bdd:run": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber-js --config cucumber.mjs",
+    "test:bdd:headed": "npm run auth:setup && BDD_BROWSER=chromium HEADED=true npm run test:bdd:run -- --retry 0 --parallel 1"
   },
   "keywords": [],
   "author": "",

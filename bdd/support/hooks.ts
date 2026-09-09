@@ -1,10 +1,13 @@
 import { After, Before, Status, setDefaultTimeout } from '@cucumber/cucumber';
+
 import { BddWorld } from './world';
 
 setDefaultTimeout(120_000);
 
-Before(async function (this: BddWorld) {
-    await this.startBrowser();
+Before(async function (this: BddWorld, { pickle }) {
+    const tags = pickle.tags.map((tag) => tag.name);
+
+    await this.startBrowser(tags);
 });
 
 After(async function (this: BddWorld, { result }) {

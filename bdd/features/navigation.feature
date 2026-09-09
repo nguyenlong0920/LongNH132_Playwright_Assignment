@@ -1,10 +1,8 @@
 @bdd @navigation
 Feature: Product navigation
 
-    Background:
-        Given the admin is logged in
-
     @regression @tc08
     Scenario: TC-08 Navigate to Products module from left menu
-        When the admin opens the Products module
-        Then the Products list page is displayed
+        Given the admin go to dashboard page
+        When the admin opens "Products" from the "Ecommerce" menu
+        Then the product list page is displayed

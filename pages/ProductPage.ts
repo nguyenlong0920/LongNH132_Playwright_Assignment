@@ -147,11 +147,4 @@ export class ProductPage {
         await expect(this.listProductRow).toHaveText('No record');
         logger.info('Product deletion confirmed');
     }
-
-    async cleanupProduct(product: ProductData) {
-        logger.info('Starting product cleanup', { name: product.name, sku: product.sku });
-        await this.clickDeleteProductButton(product);
-        await this.confirmDeleteProduct();
-        logger.info('Product cleanup completed', { name: product.name, sku: product.sku });
-    }
 }

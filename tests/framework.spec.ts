@@ -37,7 +37,8 @@ test('TC-17 - Use shared Notification component to verify messages @framework', 
 
     await productPage.verifySearchProduct(product);
 
-    await productPage.cleanupProduct(product);
+    await productPage.clickDeleteProductButton(product);
+    await productPage.confirmDeleteProduct();
 
     await notification.expectProductActionMessage('Deleted');
 });
@@ -63,12 +64,14 @@ test('TC-18 - Use fixture-injected page objects in tests @framework', async ({
     await productPage.expectLoaded();
     await productPage.createProductWithType('physical');
 
+    await createProductPage.expectLoaded();
     await createProductPage.inputAndSaveProductDetails(product);
 
     await notification.expectProductActionMessage('Created');
 
     await productPage.expectProductInList(product);
-    await productPage.cleanupProduct(product);
+    await productPage.clickDeleteProductButton(product);
+    await productPage.confirmDeleteProduct();
     
     await notification.expectProductActionMessage('Deleted');
 }); 

@@ -1,53 +1,34 @@
 import { Given, Then, When } from '@cucumber/cucumber';
+
 import { users } from '../../data/static/users';
 import { BddWorld } from '../support/world';
 
-Given('the admin login page is open', async function (this: BddWorld) {
+Given('the admin open login page', async function (this: BddWorld) {
     await this.loginPage.open();
     await this.loginPage.expectLoaded();
 });
 
-Given('the admin is logged in', async function (this: BddWorld) {
-    await this.loginPage.loginFullFlow();
-    await this.dashboardPage.expectLoaded();
+When('the admin login with {string}', async function (this: BddWorld, loginType: string) {
+    const credentials = {
+        'valid credentials': [users.admin.username, users.admin.password],
+        'invalid password': [users.admin.username, users.invalidPassword.password],
+        'no credentials': ['', ''],
+    } as const;
+
+    const [username, password] =
+        credentials[loginType as keyof typeof credentials];
+
+    await this.loginPage.login(username, password);
 });
 
-When('the admin signs in with valid credentials', async function (this: BddWorld) {
-    await this.loginPage.login(
-        users.admin.username,
-        users.admin.password,
-    );
-});
-
-When('the admin signs in with an invalid password', async function (this: BddWorld) {
-    await this.loginPage.login(
-        users.admin.username,
-        users.invalidPassword.password,
-    );
-});
-
-When('the admin submits the login form without credentials', async function (this: BddWorld) {
-    await this.loginPage.login('', '');
-});
-
-When('the admin logs out', async function (this: BddWorld) {
-    await this.header.expectLoaded();
-    await this.header.expectUserMenuVisible();
-    await this.header.logout();
-});
-
-Then('the admin login page is displayed', async function (this: BddWorld) {
-    await this.loginPage.expectLoaded();
-});
-
-Then('an invalid credentials notification is displayed', async function (this: BddWorld) {
-    await this.notification.expectLoginMessage('Fail');
-});
-
-Then('a logout notification is displayed', async function (this: BddWorld) {
-    await this.notification.expectLoginMessage('Success');
+Then('the login page displays {string} message', async function (this: BddWorld, toast: string) {
+    await this.notification.expectLoginMessage(toast as 'Fail' | 'Success');
 });
 
 Then('login required field messages are displayed', async function (this: BddWorld) {
     await this.loginPage.expectRequiredFieldValidation();
+});
+
+Then('the login page is displayed', async function (this: BddWorld) {
+    await this.loginPage.expectLoaded();
 });

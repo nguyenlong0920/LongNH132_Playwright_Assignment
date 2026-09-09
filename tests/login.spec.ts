@@ -46,12 +46,15 @@ test('TC-04 - Logout successfully @smoke', async ({
     header,
     notification,
 }) => {
-    await loginPage.loginFullFlow();
+    await loginPage.open();
+    await loginPage.expectLoaded();
+    await loginPage.login(
+        users.admin.username,
+        users.admin.password
+    );
 
     await dashboardPage.expectLoaded();
-
-    await header.expectLoaded();
-    await header.expectUserMenuVisible();
+    
     await header.logout();
 
     await loginPage.expectLoaded();

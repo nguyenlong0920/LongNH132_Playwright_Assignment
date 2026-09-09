@@ -1,16 +1,9 @@
 @bdd @product-data
 Feature: Product data management
 
-    Background:
-        Given the admin is on the Products list page
-
     @regression @tc16
-    Scenario Outline: TC-16 Create multiple products using the data factory
-        When the admin creates <productCount> products using the data factory
-        Then all generated products are visible and unique
-        When the admin cleans up all generated products
-        Then all generated products are removed
-
-        Examples:
-            | productCount |
-            | 3            |
+    Scenario: TC-16 Create multiple products using the data factory
+        When the admin create 3 products via api
+        And the admin go to product list page
+        Then the admin search and verify all generated product
+        And the admin delete all products via api

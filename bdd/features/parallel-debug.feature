@@ -2,12 +2,11 @@
 Feature: Parallel execution and debugging
 
     @parallel @tc19
-    Scenario Outline: TC-19 Create an independent product in parallel
-        Given the admin is on the Products list page
-        When parallel worker "<worker>" saves a generated product
-        Then the generated product is visible in the list
-        When the admin cleans up the generated product
-        Then a product deleted notification is displayed
+    Scenario Outline: TC-19 Run independent product tests in parallel
+        Given the admin create product via api
+        And the admin go to product list page
+        Then the admin search and verify generated product
+        And the admin delete product via api
 
         Examples:
             | worker |
@@ -16,6 +15,5 @@ Feature: Parallel execution and debugging
 
     @debugging @tc20
     Scenario: TC-20 Capture trace, screenshot, and video on failure
-        Given the admin is logged in
-        Then the dashboard page is displayed
-        When a controlled debugging failure is enabled
+        When the admin go to dashboard page
+        Then a controlled debugging failure is enabled

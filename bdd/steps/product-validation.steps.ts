@@ -2,34 +2,20 @@ import { Then, When } from '@cucumber/cucumber';
 import { ProductFactory } from '../../data/factories/ProductFactory';
 import { BddWorld } from '../support/world';
 
-When('the admin submits a product without a name',
-    async function (this: BddWorld) {
-        const product = ProductFactory.create();
+When('the admin submits a product with {string}', async function(this: BddWorld, input:string) {
+    const invalidInput = input as 'empty name' | 'invalid price';
+    const product = ProductFactory.create();
 
-        product.name = '';
+    (invalidInput === 'empty name' ? product.name = '' : product.price = '-1');
 
-        await this.createProductPage.inputAndSaveProductDetails(product);
-    },
-);
+    await this.createProductPage.inputAndSaveProductDetails(product);
+});
 
-When('the admin submits a product with an invalid price of {string}',
-    async function (this: BddWorld, price: string) {
-        const product = ProductFactory.create();
+Then('the product {string} validation message is displayed', async function(this: BddWorld, input: string) {
+    const validation = input as 'name' | 'price';
 
-        product.price = price;
-
-        await this.createProductPage.inputAndSaveProductDetails(product);
-    },
-);
-
-Then('the product name validation message is displayed',
-    async function (this: BddWorld) {
-        await this.createProductPage.verifyInvalidProductName();
-    },
-);
-
-Then('the product price validation message is displayed',
-    async function (this: BddWorld) {
-        await this.createProductPage.verifyInvalidProductPrice();
-    },
-);
+    await (validation === 'name'
+        ? this.createProductPage.verifyInvalidProductName()
+        : this.createProductPage.verifyInvalidProductPrice()
+    );
+});

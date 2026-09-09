@@ -53,10 +53,4 @@ export class LoginPage {
         await this.passwordInput.fill(password);
         await this.signInButton.click();
     }
-
-    async loginFullFlow() {
-        await this.open();
-        await this.expectLoaded();
-        await this.login(users.admin.username, users.admin.password);
-    }
 }
